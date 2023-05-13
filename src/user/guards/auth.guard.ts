@@ -13,10 +13,10 @@ constructor(private readonly reflector :Reflector,private readonly PrismaService
     async canActivate(context: ExecutionContext): Promise<boolean> {
        
         const roles =this.reflector.getAllAndOverride("roles",[context.getHandler(),context.getClass()]) as UserType[]
-      
+
         if(roles?.length>0){
              const request = context.switchToHttp().getRequest();
-              const token = request?.headers?.auth?.split("Bearer ")[1]
+             const token = request?.headers?.bearer
         try {
             const payload= await jwt.verify(token,process.env.JSON_WEB_TOKEN) as userTokenType
             const user= await this.PrismaService.user.findUnique({where:{id:payload.id}})
